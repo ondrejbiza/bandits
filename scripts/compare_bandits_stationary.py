@@ -11,7 +11,7 @@ INIT_STD = 1
 NOISE_MEAN = 0
 NOISE_STD = 1
 
-NUM_TRIALS = 2000
+NUM_TRIALS = 100
 NUM_STEPS = 1000
 
 AGENT_EPSILON = "epsilon"
@@ -61,8 +61,8 @@ def main(args):
       print("Invalid agent type: {:s}.".format(agent_type))
       exit(1)
 
-  rewards = {key: np.empty((NUM_TRIALS, NUM_STEPS), dtype=np.float32) for key in agents.keys()}
-  optimal_actions = {key: np.empty((NUM_TRIALS, NUM_STEPS), dtype=np.bool) for key in agents.keys()}
+  rewards = {key: np.zeros(NUM_STEPS, dtype=np.float32) for key in agents.keys()}
+  optimal_actions = {key: np.zeros(NUM_STEPS, dtype=np.float32) for key in agents.keys()}
 
   # run experiment
   for i in range(NUM_TRIALS):
@@ -75,17 +75,16 @@ def main(args):
     optimal_action = np.argmax(env.action_values)
 
     for key in agents.keys():
-      rewards[key][i] = agents[key].rewards
-      optimal_actions[key][i] = np.array(agents[key].actions) == optimal_action
+      rewards[key] += agents[key].rewards
+      optimal_actions[key] += np.array(agents[key].actions) == optimal_action
       agents[key].reset()
 
     env.reset()
 
   # average rewards and optimal actions
   for key in agents.keys():
-    rewards[key] = np.mean(rewards[key], axis=0)
-    optimal_actions[key] = optimal_actions[key].astype(np.float32)
-    optimal_actions[key] = np.mean(optimal_actions[key], axis=0) * 100
+    rewards[key] = rewards[key] / NUM_TRIALS
+    optimal_actions[key] = (optimal_actions[key] / NUM_TRIALS) * 100
 
   # plot average rewards
   for i, key in enumerate(sorted(rewards.keys())):
