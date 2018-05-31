@@ -28,16 +28,23 @@ def main(args):
     print("Error: Provide setting for each agent.")
     exit(1)
 
+  if args.inits is not None and len(args.inits) != len(args.agents):
+    print("Error: If you want to set initialization, provide values for all agents.")
+    exit(1)
+
+  # default setting
+  inits = args.inits
+  if inits is None:
+    inits = [0] * len(args.agents)
+
   # setup algorithms and arrays to hold results
   env = environment.Environment(NUM_ACTIONS, INIT_MEAN, INIT_STD, NOISE_MEAN, NOISE_STD)
   agents = {}
-  for agent_type, setting in zip(args.agents, args.settings):
+  for agent_type, setting, init in zip(args.agents, args.settings, inits):
     if agent_type == AGENT_EPSILON:
-      agents["e-greedy (epsilon {:.2f}".format(setting)] = bandit.EpsilonGreedyBandit(env, setting)
+      agents["e-greedy (epsilon {:.2f}".format(setting)] = bandit.EpsilonGreedyBandit(env, setting, init=init)
     elif agent_type == AGENT_SOFTMAX:
-      print("not implemented")
-      exit(1)
-      #agents["e-greedy (epsilon {:.2f}".format(setting)] = bandit.EpsilonGreedyBandit(env, setting)
+      agents["softmax (temperature: {:.2f}".format(setting)] = bandit.SoftmaxBandit(env, setting, init=init)
     else:
       print("Invalid agent type: {:s}.".format(agent_type))
       exit(1)
@@ -104,7 +111,10 @@ if __name__ == "__main__":
   parser.add_argument("save_path", help="save path for all figures")
 
   parser.add_argument("-a", "--agents", nargs="+", help="{:s} or {:s}".format(AGENT_EPSILON, AGENT_SOFTMAX))
-  parser.add_argument("-s", "--settings", nargs="+", type=float, help="epsilon for epsilon greedy or temperature for softmax")
+  parser.add_argument("-s", "--settings", nargs="+", type=float,
+                      help="epsilon for epsilon greedy or temperature for softmax")
+  parser.add_argument("-i", "--inits", nargs="+", type=float,
+                      help="initial action values (used for optimistic initialization); zero by default")
   parser.add_argument("-f", "--format", help="figure format", default="svg")
 
   parsed = parser.parse_args()
