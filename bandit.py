@@ -4,11 +4,12 @@ import utils
 
 class EpsilonGreedyBandit:
 
-  def __init__(self, env, epsilon, init=0):
+  def __init__(self, env, epsilon, init=0, alpha=None):
 
     self.env = env
     self.epsilon = epsilon
     self.init = init
+    self.alpha = alpha
 
     self.action_values = None
     self.action_counts = None
@@ -30,7 +31,11 @@ class EpsilonGreedyBandit:
     reward = self.env.act(action)
 
     # update action value
-    self.action_values[action] += utils.update_mean(reward, self.action_values[action], self.action_counts[action])
+    if self.alpha is None:
+      self.action_values[action] += utils.update_mean(reward, self.action_values[action], self.action_counts[action])
+    else:
+      self.action_values[action] += self.alpha * (reward - self.action_values[action])
+
     self.action_counts[action] += 1
 
     # save action and reward
@@ -47,11 +52,12 @@ class EpsilonGreedyBandit:
 
 class SoftmaxBandit:
 
-  def __init__(self, env, temperature, init=0):
+  def __init__(self, env, temperature, init=0, alpha=None):
 
     self.env = env
     self.temperature = temperature
     self.init = init
+    self.alpha = alpha
 
     self.action_values = None
     self.action_counts = None
@@ -70,7 +76,11 @@ class SoftmaxBandit:
     reward = self.env.act(action)
 
     # update action value
-    self.action_values[action] += utils.update_mean(reward, self.action_values[action], self.action_counts[action])
+    if self.alpha is None:
+      self.action_values[action] += utils.update_mean(reward, self.action_values[action], self.action_counts[action])
+    else:
+      self.action_values[action] += self.alpha * (reward - self.action_values[action])
+
     self.action_counts[action] += 1
 
     # save action and reward

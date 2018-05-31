@@ -48,7 +48,6 @@ class NonStationaryEnvironment:
 
   def __init__(self, num_actions, init_value, walk_std, noise_mean, noise_std):
 
-
     self.num_actions = num_actions
     self.init_value = init_value
     self.walk_std = walk_std
