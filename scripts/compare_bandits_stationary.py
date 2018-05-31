@@ -32,19 +32,31 @@ def main(args):
     print("Error: If you want to set initialization, provide values for all agents.")
     exit(1)
 
+  if args.labels is not None and len(args.labels) != len(args.labels):
+    print("Error: If you want to set labels, provide one for each agent.")
+    exit(1)
+
   # default setting
   inits = args.inits
   if inits is None:
     inits = [0] * len(args.agents)
 
+  labels = args.labels
+  if labels is None:
+    labels = [None] * len(args.agents)
+
   # setup algorithms and arrays to hold results
-  env = environment.Environment(NUM_ACTIONS, INIT_MEAN, INIT_STD, NOISE_MEAN, NOISE_STD)
+  env = environment.StationaryEnvironment(NUM_ACTIONS, INIT_MEAN, INIT_STD, NOISE_MEAN, NOISE_STD)
   agents = {}
-  for agent_type, setting, init in zip(args.agents, args.settings, inits):
+  for agent_type, setting, init, label in zip(args.agents, args.settings, inits, labels):
     if agent_type == AGENT_EPSILON:
-      agents["e-greedy (epsilon {:.2f}".format(setting)] = bandit.EpsilonGreedyBandit(env, setting, init=init)
+      if label is None:
+        label = "e-greedy (epsilon {:.2f}".format(setting)
+      agents[label] = bandit.EpsilonGreedyBandit(env, setting, init=init)
     elif agent_type == AGENT_SOFTMAX:
-      agents["softmax (temperature: {:.2f}".format(setting)] = bandit.SoftmaxBandit(env, setting, init=init)
+      if label is None:
+        label = "softmax (temperature: {:.2f}".format(setting)
+      agents[label] = bandit.SoftmaxBandit(env, setting, init=init)
     else:
       print("Invalid agent type: {:s}.".format(agent_type))
       exit(1)
@@ -76,13 +88,16 @@ def main(args):
     optimal_actions[key] = np.mean(optimal_actions[key], axis=0) * 100
 
   # plot average rewards
-  for key, reward in rewards.items():
-    plt.plot(reward, label=key)
+  for i, key in enumerate(sorted(rewards.keys())):
+    plt.plot(rewards[key], label=key)
 
   plt.xticks([0, 250, 500, 750, 1000])
   plt.yticks([0.0, 0.5, 1.0, 1.5])
   plt.xlabel("Steps")
   plt.ylabel("Average reward")
+
+  if args.title is not None:
+    plt.title(args.title)
 
   plt.legend()
 
@@ -90,13 +105,16 @@ def main(args):
   plt.show()
 
   # plot optimal actions
-  for key, optimal_action in optimal_actions.items():
-    plt.plot(optimal_action, label=key)
+  for key in sorted(optimal_actions.keys()):
+    plt.plot(optimal_actions[key], label=key)
 
   plt.xticks([0, 250, 500, 750, 1000])
   plt.yticks([0, 20, 40, 60, 80, 100])
   plt.xlabel("Steps")
   plt.ylabel("Optimal action (%)")
+
+  if args.title is not None:
+    plt.title(args.title)
 
   plt.legend()
 
@@ -115,6 +133,8 @@ if __name__ == "__main__":
                       help="epsilon for epsilon greedy or temperature for softmax")
   parser.add_argument("-i", "--inits", nargs="+", type=float,
                       help="initial action values (used for optimistic initialization); zero by default")
+  parser.add_argument("-l", "--labels", nargs="+", help="custom labels for each agent")
+  parser.add_argument("-t", "--title", help="title for the plots")
   parser.add_argument("-f", "--format", help="figure format", default="svg")
 
   parsed = parser.parse_args()
