@@ -43,8 +43,8 @@ python -m scripts.compare_bandits_stationary images/epsilon -a epsilon epsilon e
 #### Softmax bandits
 
 Another type of bandit presented in the book is the softmax bandit. Softmax bandits should perform better than 
-ε-greedy bandits because they avoid bad actions during exploration. However, they are quite sensitive to the temperature 
-parameter setting.
+ε-greedy bandits because they avoid bad actions during exploration. However, they are quite sensitive to the 
+temperature (τ) parameter setting.
 
 ![softmax_1](images/softmax_rewards.svg)
 ![softmax_2](images/softmax_actions.svg)
@@ -56,7 +56,9 @@ python -m scripts.compare_bandits_stationary images/softmax -a softmax softmax s
 #### Optimistic initialization
 
 Optimistic Initialization is an alternative to ε-greedy or softmax exploration policies. It outperforms the ε-greedy 
-bandit in this simple environment but has some drawback (e.g. it cannot track non-stationary rewards).
+bandit in this simple environment but has some drawback (e.g. it cannot track non-stationary rewards). Interestingly,
+the optimistically initialized bandit chooses the optimal action with lower frequency than the ε-greedy bandit
+but still achieves higher average reward.
 
 ![optimistic_init_1](images/optimistic_init_rewards.svg)
 ![optimistic_init_2](images/optimistic_init_actions.svg)
@@ -86,6 +88,9 @@ the environment.
 I compare the ε-greedy bandit from the previous section with a modified version that uses a constant α during sample 
 averaging. Constant α value causes it to prioritize recent rewards, which models the non-stationary environment better.
 
+The agents take 5000 steps in the environment instead of 1000, so that we can see the gap between the two agents 
+increase.
+
 ![non_stationary_bandits_1](images/nonstationary_rewards.svg)
 ![non_stationary_bandits_2](images/nonstationary_actions.svg)
 
@@ -95,7 +100,7 @@ python -m scripts.compare_bandits_nonstationary images/nonstationary -a epsilon 
 
 ## Setup
 
-Install Python3 and packages listed in requirements.txt.
+Install Python 3 and all packages listed in requirements.txt.
 
 ## Usage
 
