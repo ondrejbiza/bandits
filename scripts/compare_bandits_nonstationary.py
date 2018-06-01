@@ -7,7 +7,7 @@ import bandit, environment
 # settings
 NUM_ACTIONS = 10
 INIT_VALUE = 0.0
-DEFAULT_WALK_STD = 0.1
+DEFAULT_WALK_STD = 0.01
 NOISE_MEAN = 0
 NOISE_STD = 1
 
