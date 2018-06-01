@@ -123,7 +123,7 @@ def main(args):
 
 if __name__ == "__main__":
 
-  parser = argparse.ArgumentParser()
+  parser = argparse.ArgumentParser("Compare bandits in a stationary environment.")
 
   parser.add_argument("save_path", help="save path for all figures")
 

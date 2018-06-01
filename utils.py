@@ -1,5 +1,3 @@
-
-
 def update_mean(value, mean, count):
   """
   Update value of a streaming mean.
