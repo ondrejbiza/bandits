@@ -87,7 +87,7 @@ def main(args):
     optimal_actions[key] = (optimal_actions[key] / NUM_TRIALS) * 100
 
   # plot average rewards
-  plt.figure(figsize=(6, 4))
+  plt.figure(figsize=(5, 3))
 
   for i, key in enumerate(sorted(rewards.keys())):
     plt.plot(rewards[key], label=key)
@@ -106,7 +106,7 @@ def main(args):
   plt.show()
 
   # plot optimal actions
-  plt.figure(figsize=(6, 4))
+  plt.figure(figsize=(5, 3))
 
   for key in sorted(optimal_actions.keys()):
     plt.plot(optimal_actions[key], label=key)
