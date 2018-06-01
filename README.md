@@ -1,19 +1,26 @@
 # Bandits
 
-Experiments with a few bandit algorithms from the 2nd chapter of Sutton and Barton's Reinforcement Learning: An Introduction.
+Experiments with bandit algorithms from the 2nd chapter of Sutton and Barto's Reinforcement Learning: An Introduction.
 
 ## Results
 
-Each plot has a corresponding command that you can call to replicate it yourself.
+You can generate each plot with the command written under it.
 
 ### Stationary Environment
 
-The values for each action are drawn from a normal distribution with zero mean and unit variance and do not change during the experiment.
-The bandits take 1000 steps in the environment choosing from 10 actions during each step. The experiments are repeated 2000 times.
+The experimental setup follows the one described in the book:
+
+The values for each action are drawn from a normal distribution with zero mean and unit variance and do not change 
+during the experiment. The bandits take 1000 steps in the environment choosing from 10 actions at each step.
+Furthermore, the bandits observe rewards with noise drawn from normal distribution with zero mean and unit variance 
+added to the action values. The experiments are repeated 2000 times.
+
+I plot the average reward and the percentage of times the bandit chose the optimal actions.
 
 #### Comparison from the book
 
-I replicated Figure 2.1 from the book to check my implementation. ε-greedy bandit outperforms a greedy bandit in this simple testbed.
+I replicated Figure 2.1 from the book to check my implementation. ε-greedy bandit outperforms a greedy bandit in this 
+simple testbed.
 
 ![plot_from_book_1](images/book_1_rewards.svg)
 ![plot_from_book_2](images/book_1_actions.svg)
@@ -35,9 +42,9 @@ python -m scripts.compare_bandits_stationary images/epsilon -a epsilon epsilon e
 
 #### Softmax bandits
 
-Another type of bandit presented in the book is softmax bandit. Softmax bandits should perform better than ε-greedy bandits in theory because 
-they avoid bad actions even during exploration. 
-However, they are quite sensitive to the temperature parameter setting.
+Another type of bandit presented in the book is the softmax bandit. Softmax bandits should perform better than 
+ε-greedy bandits because they avoid bad actions during exploration. However, they are quite sensitive to the temperature 
+parameter setting.
 
 ![softmax_1](images/softmax_rewards.svg)
 ![softmax_2](images/softmax_actions.svg)
@@ -48,8 +55,8 @@ python -m scripts.compare_bandits_stationary images/softmax -a softmax softmax s
 
 #### Optimistic initialization
 
-Optimistic Initialization is an alternative to ε-greedy or softmax exploration policies. It outperforms ε-greedy bandit 
-in this simple environment but has some drawback, like an inability to track non-stationary rewards.
+Optimistic Initialization is an alternative to ε-greedy or softmax exploration policies. It outperforms the ε-greedy 
+bandit in this simple environment but has some drawback (e.g. it cannot track non-stationary rewards).
 
 ![optimistic_init_1](images/optimistic_init_rewards.svg)
 ![optimistic_init_2](images/optimistic_init_actions.svg)
@@ -60,7 +67,8 @@ python -m scripts.compare_bandits_stationary images/optimistic_init -a epsilon e
 
 #### Final Comparison
 
-Finally, I compare the best ε-greedy, softmax and optimistically initalized bandits. Softmax bandits wins by a small margin.
+Finally, I compare the best ε-greedy, softmax and optimistically initialized bandits. The softmax bandit wins by a 
+small margin.
 
 ![epsilon_vs_softmax_vs_optimistic_1](images/epsilon_vs_softmax_vs_optimistic_rewards.svg)
 ![epsilon_vs_softmax_vs_optimistic_2](images/epsilon_vs_softmax_vs_optimistic_actions.svg)
@@ -71,9 +79,9 @@ python -m scripts.compare_bandits_stationary images/epsilon_vs_softmax_vs_optimi
 
 ### Non-stationary Environment
 
-In this non-stationary environment experiments, all action values start at 0. After each step of the agents, 
-the action values take a small random step drawn from a normal distribution. Therefore, the action values change as 
-the bandits interact with the environment.
+In this experiment, all action values start at 0. After all agents perform a single action, the action values take a 
+small random step drawn from a normal distribution. Therefore, the action values change as the bandits interact with 
+the environment.
 
 I compare the ε-greedy bandit from the previous section with a modified version that uses a constant α during sample 
 averaging. Constant α value causes it to prioritize recent rewards, which models the non-stationary environment better.
@@ -88,3 +96,19 @@ python -m scripts.compare_bandits_nonstationary images/nonstationary -a epsilon 
 ## Setup
 
 Install Python3 and packages listed in requirements.txt.
+
+## Usage
+
+Each scripts contains documentation for all arguments.
+
+For stationary experiments, execute:
+
+```
+python -m scripts.compare_bandits_stationary -h
+```
+
+and for non-stationary experiments:
+
+```
+python -m scripts.compare_bandits_nonstationary -h
+```
