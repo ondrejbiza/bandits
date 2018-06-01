@@ -5,6 +5,13 @@ import utils
 class EpsilonGreedyBandit:
 
   def __init__(self, env, epsilon, init=0, alpha=None):
+    """
+    Epsilon-greedy bandit.
+    :param env:         Bandit environment.
+    :param epsilon:     Epsilon (probability of choosing a random action).
+    :param init:        Initial action values.
+    :param alpha:       Alpha for action value sample averages. None means 1 / num_steps.
+    """
 
     self.env = env
     self.epsilon = epsilon
@@ -19,6 +26,10 @@ class EpsilonGreedyBandit:
     self.reset()
 
   def act(self):
+    """
+    Take a single action in an environment.
+    :return:    None.
+    """
 
     # select an action
     r = np.random.uniform(0, 1)
@@ -43,6 +54,10 @@ class EpsilonGreedyBandit:
     self.rewards.append(reward)
 
   def reset(self):
+    """
+    Reset the bandit.
+    :return:    None.
+    """
 
     self.action_values = np.zeros(self.env.num_actions, dtype=np.float32) + self.init
     self.action_counts = np.zeros(self.env.num_actions, dtype=np.int32)
@@ -53,6 +68,13 @@ class EpsilonGreedyBandit:
 class SoftmaxBandit:
 
   def __init__(self, env, temperature, init=0, alpha=None):
+    """
+    Epsilon-greedy bandit.
+    :param env:             Bandit environment.
+    :param temperature:     Temperate for the softmax (the higher the more random actions).
+    :param init:            Initial action values.
+    :param alpha:           Alpha for action value sample averages. None means 1 / num_steps.
+    """
 
     self.env = env
     self.temperature = temperature
@@ -67,6 +89,10 @@ class SoftmaxBandit:
     self.reset()
 
   def act(self):
+    """
+    Take a single action in an environment.
+    :return:    None.
+    """
 
     # select an action
     softmax = self.__softmax(self.action_values, self.temperature)
@@ -88,6 +114,10 @@ class SoftmaxBandit:
     self.rewards.append(reward)
 
   def reset(self):
+    """
+    Reset the bandit.
+    :return:    None.
+    """
 
     self.action_values = np.zeros(self.env.num_actions, dtype=np.float32) + self.init
     self.action_counts = np.zeros(self.env.num_actions, dtype=np.int32)
@@ -97,6 +127,12 @@ class SoftmaxBandit:
 
   @staticmethod
   def __softmax(x, t):
+    """
+    Softmax function.
+    :param x:   Array of values.
+    :param t:   Temperature.
+    :return:    Softmax distribution.
+    """
 
     e_x = np.exp(x / t)
     return e_x / e_x.sum()

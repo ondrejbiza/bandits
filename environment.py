@@ -80,5 +80,9 @@ class NonStationaryEnvironment:
     return value
 
   def step(self):
+    """
+    Take a single step in a random walk.
+    :return:      None.
+    """
 
     self.action_values += np.random.normal(0, self.walk_std, size=self.num_actions)

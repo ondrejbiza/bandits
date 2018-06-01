@@ -34,11 +34,17 @@ python -m scripts.compare_bandits_stationary images/epsilon_vs_softmax_vs_optimi
 non_stationary_bandits_1
 
 ```
-python -m scripts.compare_bandits_nonstationary test -a epsilon epsilon -s 0.1 0.1 --alphas 0.0 0.1 -l "α=1/k" "α=0.1" -t "ε-greedy bandits, ε=0.1"
+python -m scripts.compare_bandits_nonstationary nonstat_1 -a epsilon epsilon -s 0.1 0.1 --alphas 0.0 0.1 -l "α=1/k" "α=0.1" -t "ε-greedy bandits, ε=0.1"
 ```
 
 non_stationary_bandits_2
 
 ```
-python -m scripts.compare_bandits_nonstationary test -a epsilon epsilon -s 0.1 0.1 --alphas 0.0 0.1 -l "α=1/k" "α=0.1" -t "ε-greedy bandits, ε=0.1" --walk-std 0.5
+python -m scripts.compare_bandits_nonstationary nonstat_2 -a epsilon epsilon -s 0.1 0.1 --alphas 0.0 0.1 -l "α=1/k" "α=0.1" -t "ε-greedy bandits, ε=0.1" --walk-std 0.5
+```
+
+non_stationary_bandits_3
+
+```
+python -m scripts.compare_bandits_nonstationary nonstat_3 -a epsilon epsilon -s 0.1 0.1 --alphas 0.0 0.1 -l "α=1/k" "α=0.1" -t "ε-greedy bandits, ε=0.1" --walk-std 0.01
 ```
