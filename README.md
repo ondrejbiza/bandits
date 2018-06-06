@@ -98,6 +98,39 @@ increase.
 python -m scripts.compare_bandits_nonstationary images/nonstationary -a epsilon epsilon -s 0.1 0.1 --alphas 0.0 0.1 -l "α=1/k" "α=0.1" -t "ε-greedy bandits, ε=0.1"
 ```
 
+### Advanced Bandits in a Stationary Environment ###
+
+#### UCB ####
+
+[UCB bandits](https://webdocs.cs.ualberta.ca/~games/go/seminar/notes/2007/slides_ucb.pdf) 
+establish an upper bound on regret–how much we loose for not playing the optimal action.
+UCB1 beats ε-greedy while not having any parameters to tune.
+
+![ucb1_1](images/ucb1_rewards.svg)
+![ucb1_2](images/ucb1_actions.svg)
+
+```
+python -m scripts.compare_bandits_stationary images/ucb1 -a ucb1 epsilon -s 0.0 0.1 -l "UCB1" "ε-greedy (ε=0.1)"
+```
+
+UCB2 tightens the bound on the regret but introduces an additional parameter α.
+
+![ucb2_alpha_1](images/ucb2_alpha_rewards.svg)
+![ucb2_alpha_2](images/ucb2_alpha_actions.svg)
+
+```
+python -m scripts.compare_bandits_stationary images/ucb2_alpha -a ucb2 ucb2 ucb2 ucb2 -s 0.001 0.01 0.1 0.5 -l "α=0.001" "α=0.01" "α=0.1" "α=0.5" -t UCB2
+```
+
+UCB2 reaches optimal performance faster than UCB1..
+
+![ucb2_1](images/ucb2_rewards.svg)
+![ucb2_2](images/ucb2_actions.svg)
+
+```
+python -m scripts.compare_bandits_stationary images/ucb2 -a ucb2 ucb1 epsilon -s 0.5 0.0 0.1 -l "UCB2 (α=0.5)" "UCB1" "ε-greedy (ε=0.1)"
+```
+
 ## Setup
 
 Install Python 3 and all packages listed in requirements.txt.

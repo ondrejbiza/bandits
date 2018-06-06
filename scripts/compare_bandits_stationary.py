@@ -16,6 +16,8 @@ NUM_STEPS = 1000
 
 AGENT_EPSILON = "epsilon"
 AGENT_SOFTMAX = "softmax"
+AGENT_UCB1 = "ucb1"
+AGENT_UCB2 = "ucb2"
 
 def main(args):
 
@@ -57,6 +59,14 @@ def main(args):
       if label is None:
         label = "softmax (temperature: {:.2f}".format(setting)
       agents[label] = bandit.SoftmaxBandit(env, setting, init=init)
+    elif agent_type == AGENT_UCB1:
+      if label is None:
+        label = "ucb1"
+      agents[label] = bandit.UCB1Bandit(env, init=init)
+    elif agent_type == AGENT_UCB2:
+      if label is None:
+        label = "ucb2 (alpha: {:.2f}".format(setting)
+      agents[label] = bandit.UCB2Bandit(env, setting, init=init)
     else:
       print("Invalid agent type: {:s}.".format(agent_type))
       exit(1)
@@ -127,9 +137,10 @@ if __name__ == "__main__":
 
   parser.add_argument("save_path", help="save path for all figures")
 
-  parser.add_argument("-a", "--agents", nargs="+", help="{:s} or {:s}".format(AGENT_EPSILON, AGENT_SOFTMAX))
+  parser.add_argument("-a", "--agents", nargs="+",
+                      help="{:s}, {:s}, {:s} or {:s}".format(AGENT_UCB1, AGENT_UCB2, AGENT_EPSILON, AGENT_SOFTMAX))
   parser.add_argument("-s", "--settings", nargs="+", type=float,
-                      help="epsilon for epsilon greedy or temperature for softmax")
+                      help="epsilon for epsilon greedy, temperature for softmax, arbitrary value for UCB1, alpha for UCB2")
   parser.add_argument("-i", "--inits", nargs="+", type=float,
                       help="initial action values (used for optimistic initialization); zero by default")
   parser.add_argument("-l", "--labels", nargs="+", help="custom labels for each agent")
